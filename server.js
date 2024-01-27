@@ -29,7 +29,7 @@ app.get('/notes', (res, req) => {
 // read and return the notes REVIEW
 app.get('/api/notes', (res, req) => {
 
-    res.json(`${req.method} request received to get reviews`);
+    res.json(`${req.method} request received to get notes`);
 
     fs.readFile(noteData, 'utf8', (err, data) => {
         if (err) {
