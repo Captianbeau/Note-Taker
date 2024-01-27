@@ -1,26 +1,32 @@
+//packages require
 const express = require('express');
 const path = require('path');
 const fs = require('fs')
-const noteData = require('./db/db.json');
-const api = require('./public/assets/js/index.js')
 
+//file require
+const noteData = require('./db/db.json');
+
+//
 const app = express();
 const PORT = 3001;
 
+//app.use
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-app.use('/api', api);
 
+//Home page index.html
 app.get('/', (res, req) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+// /notes is notes.html
 app.get('/notes', (res, req) => {
     res.sendFile(path.join(__dirname, 'public/notes.html'));
 });
 
+// read and return the notes REVIEW
 app.get('/api/notes', (res, req) => {
 
     res.json(`${req.method} request received to get reviews`);
@@ -36,6 +42,7 @@ app.get('/api/notes', (res, req) => {
     })
 });
 
+// add new notes to db REVIEW
 app.post('/api/notes', (req, res) => {
     console.info(`${req.method} add note request`);
 
@@ -45,7 +52,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
-            note_id: randomUUID()
+            note_id: 'need id'
         };
 
         fs.readFile(noteData, 'utf8', (err, data) => {
