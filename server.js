@@ -17,27 +17,26 @@ app.use(express.static('public'));
 
 
 //Home page index.html
-app.get('/', (res, req) => {
+app.get('/', (req,res ) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 // /notes is notes.html
-app.get('/notes', (res, req) => {
+app.get('/notes', (req,res) => {
     res.sendFile(path.join(__dirname, 'public/notes.html'));
 });
 
 // read and return the notes REVIEW
-app.get('/api/notes', (res, req) => {
+app.get('/api/notes', (req, res) => {
 
-    res.json(`${req.method} request received to get notes`);
+    console.log(`${req.method} request received to get notes`);
 
-    fs.readFile(noteData, 'utf8', (err, data) => {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             res.status(500).json(err);
         } else {
-            const parsedNotes = json.parse(data);
-            res.status(200).json('success')
-            return parsedNotes;
+            const parsedNotes = JSON.parse(data);
+            res.status(200).json(parsedNotes)
         }
     })
 });
@@ -55,7 +54,7 @@ app.post('/api/notes', (req, res) => {
             note_id: 'need id'
         };
 
-        fs.readFile(noteData, 'utf8', (err, data) => {
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
             } else {
@@ -63,7 +62,7 @@ app.post('/api/notes', (req, res) => {
 
                 parsedNotes.push(newNote);
 
-                fs.writeFile(noteData, JSON.stringify(parsedNotes, (err) =>
+                fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, (err) =>
                     err
                         ? console.error(err)
                         : console.log('New Note added')
