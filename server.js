@@ -30,6 +30,7 @@ app.get('/notes', (req,res) => {
 app.get('/api/notes', (req, res) => {
 
     console.log(`${req.method} request received to get notes`);
+    
 
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
@@ -51,7 +52,6 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
-            note_id: 'need id'
         };
 
         fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -62,11 +62,12 @@ app.post('/api/notes', (req, res) => {
 
                 parsedNotes.push(newNote);
 
-                fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, (err) =>
+                fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null),
+                (err) =>
                     err
                         ? console.error(err)
                         : console.log('New Note added')
-                ));
+                );
             }
         });
         const response = {
