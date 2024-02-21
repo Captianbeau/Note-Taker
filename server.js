@@ -1,7 +1,8 @@
 //packages require
 const express = require('express');
 const path = require('path');
-const fs = require('fs')
+const fs = require('fs');
+const uuid = require('uuid')
 
 //file require
 const noteData = require('./db/db.json');
@@ -52,6 +53,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
+            id: uuid.v4()
         };
 
         fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -81,6 +83,22 @@ app.post('/api/notes', (req, res) => {
         res.status(500).json('error');
 
     }
+})
+app.get('/api/notes/:id', (req,res) =>{
+    const id = req.params.id;
+
+    fs.readFile('/db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            const parsedNotes = JSON.parse(data);
+            res.status(200).json(parsedNotes)
+            const title = parsedNotes.json.filter((title) => title.id === id)
+            const text = parsedNotes.json.filter((text) => text.id === id)
+            const activeNote = {title, text}
+            return activeNote.id;
+        } 
+    })
 })
 
 app.listen(PORT, () => {
